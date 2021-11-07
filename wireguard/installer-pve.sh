@@ -1,7 +1,10 @@
 #!/bin/sh
 
 # Updaten
-echo -e "Update \e[32mGreen"
+echo -e "\e[32mGreen"
+
+F_VDOBLE="\033#6"
+printf "${F_VDOBLE}Esto es...\n"
 
 apt update
 apt upgrade -y
