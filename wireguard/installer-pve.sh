@@ -20,3 +20,4 @@ echo Wireguard UI wird installiert!
 [ -f /etc/systemd/system/wgui.service ] || wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -P /etc/systemd/system/
 
 wget git.io/wireguard -O wireguard-install.sh && bash wireguard-install.sh
+echo hallo
