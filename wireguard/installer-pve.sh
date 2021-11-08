@@ -48,7 +48,7 @@ echo -e ""
 
 
 read -p "                                       Wollen Sie fortfahren? (j/n)         " A
-if [ "$A" == "" -o "$A" == "j" ];then
+if [ "$A" == "" -o "$A" == "j" ] || [ "$A" == "" -o "$A" == "y" ];then
 
     # Updaten
 echo -e "\e[1;100m#### 1.   Updates werden geholt und Installiert\e[0m"
