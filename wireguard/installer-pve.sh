@@ -32,11 +32,11 @@ printf "\033c"
 print_centered "wireguard-pve-install V1.0.0 Stand 08.11.2021                                                                             2021 forum.iobroker.net/user/crunkfx" " "
 echo -e ""
 
-print_centered "#" "#"
+print_centered "-" "-"
 print_centered "                                                               " "#"
 print_centered "            Willkommen zum WireGuard Easy-Installer            " "#"
 print_centered "                                                               " "#"
-print_centered "#" "#"
+print_centered "-" "-"
 ##======================= Farben definieren =========================##
 echo -e ""
 echo -e ""
