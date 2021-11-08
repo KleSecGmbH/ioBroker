@@ -1,9 +1,12 @@
 #!/bin/sh
+for i in {16..21} {21..16} ; do echo -en "\e[41;5;${i}m \e[0m" ; done ; echo
 
-echo -e "\e[1;100mWillkommen Zum Wirguard Easy-Installer"
+echo -e "\e[1;100m                              Willkommen Zum Wirguard Easy-Installer"
 echo -e "\e[100mDieser Installer wird Wireguard-Server, Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren."
 
-read -p "Wollen Sie fortfahren?" A
+for i in {16..21} {21..16} ; do echo -en "\e[41;5;${i}m \e[0m" ; done ; echo
+
+read -p "                                           Wollen Sie fortfahren?" A
 if [ "$A" == "" -o "$A" == "j" ];then
 
     # Updaten
