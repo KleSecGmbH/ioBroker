@@ -5,13 +5,8 @@ echo -e "\e[100mDieser Installer wird Wireguard-Server, Wireguard-UI, sowie alle
 
 read -p "Wollen Sie fortfahren?" A
 if [ "$A" == "" -o "$A" == "j" ];then
-    break
-else
-    echo -e "\e[1;41mInstallation abgebrochen!"
-    exit 1
-fi
 
-# Updaten
+    # Updaten
 echo -e "\e[1;100mUpdates werden goholt und Installiert"
 
 
@@ -33,3 +28,10 @@ echo Wireguard UI wird installiert!
 
 wget git.io/wireguard -O wireguard-install.sh 
 bash wireguard-install.sh
+
+else
+    echo -e "\e[1;41mInstallation abgebrochen!"
+    exit 1
+fi
+
+
