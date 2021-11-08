@@ -42,33 +42,40 @@ echo -e ""
 echo -e ""
 echo -e ""
 print_centered "Dieser Installer wird Wireguard-Server, Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren." " "
+echo -e ""
+echo -e ""
 
 
 
-
-read -p "                                           Wollen Sie fortfahren?" A
+read -p "######################         Wollen Sie fortfahren? (j/n)         ######################" A
 if [ "$A" == "" -o "$A" == "j" ];then
 
     # Updaten
-echo -e "\e[1;100mUpdates werden geholt und Installiert\e[0m"
+echo -e "\e[1;100m#### 1.   Updates werden geholt und Installiert\e[0m"
 
 
-apt update
-apt upgrade -y
+apt update > /dev/null
+apt upgrade -y > /dev/null
 
 # Pakete laden
-echo Die erforderlichen Pakete werden geladen!
+echo -e "\e[1;100m#### 2.   Die erforderlichen Pakete werden geladen und installiert\e[0m"
 
-apt install docker.io -y
-apt install docker-compose -y
+apt install docker.io -y > /dev/null
+apt install docker-compose -y > /dev/null
 
 # Wireguard UI Konfigurieren
-echo Wireguard UI wird installiert!
+echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
 
 [ -f /root/wireguard-ui/docker-compose.yml ] || wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/docker-compose.yml -P /root/wireguard-ui
 [ -f /etc/systemd/system/wgui.path ] || wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -P /etc/systemd/system/
 [ -f /etc/systemd/system/wgui.service ] || wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -P /etc/systemd/system/
 
+cd /root/wireguard-ui
+docker-compose
+
+# WireGuard Installer Starten
+echo -e "\e[1;100m#### 4.   Wireguard Installer wird gestartet\e[0m"
+sleep 5
 wget git.io/wireguard -O wireguard-install.sh 
 bash wireguard-install.sh
 
