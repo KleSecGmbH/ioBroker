@@ -38,7 +38,7 @@ BOLD='\e[1m'
 
 ##====================== Terminal leermachen ========================##
 printf "\033c"
-print_centered "-" "-"
+print_centered "#" 
 
 ##======================= Farben definieren =========================##
 echo -e "wireguard-pve-install V1.0.0 Stand 08.11.2021                                                                             2021 forum.iobroker.net/user/crunkfx"
