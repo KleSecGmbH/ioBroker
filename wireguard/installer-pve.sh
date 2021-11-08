@@ -1,4 +1,12 @@
 #!/bin/sh
+
+# Terminal leermachen
+printf "\033c"
+
+##======================= Farben definieren =========================##
+blue=$(tput setaf 4)
+normal=$(tput sgr0)
+
 COLUMNS=$(tput cols) 
 title="\e[1;32mWillkommen Zum Wirguard Easy-Installer\e[0m" 
 printf "%*s\n" $(((${#title}+$COLUMNS)/2)) "$title"
