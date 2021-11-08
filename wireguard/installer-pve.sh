@@ -115,7 +115,7 @@ systemctl enable wgui.{path,service}
 systemctl start wgui.{path,service}
 # Firewallregeln setzen
 echo -e "\e[1;100m#### 4.   Firewallregeln werden gesetzt\e[0m"
-ufw allow 51821/udp
+ufw allow 51820/udp
 ufw allow 5000/tcp
 ufw enable
 
