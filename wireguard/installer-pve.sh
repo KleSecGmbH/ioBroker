@@ -50,25 +50,62 @@ echo -e ""
 read -p "                            Wollen Sie fortfahren? (j/n)         " A
 if [ "$A" == "" -o "$A" == "j" ] || [ "$A" == "" -o "$A" == "y" ];then
 
-    # Updaten
+# Updaten
 echo -e "\e[1;100m#### 1.   Updates werden geholt und Installiert\e[0m"
 
+echo -e "\e[1;100m#apt update wird ausgführt\e[0m"
 
 apt update > /dev/null
+if [ $? -eq 0 ]; then
+   echo -e "\e[1;32m#Erfolgreich\e[0m"
+else
+   echo -e "\e[0;31m#Fehler\e[0m"
+fi
+
+
+echo -e "\e[1;100m#apt upgrade wird ausgführt\e[0m"
 apt upgrade -y > /dev/null
+if [ $? -eq 0 ]; then
+   echo -e "\e[1;32m#Erfolgreich\e[0m"
+else
+   echo -e "\e[0;31m#Fehler\e[0m"
+fi
+
 
 # Pakete laden
 echo -e "\e[1;100m#### 2.   Die erforderlichen Pakete werden geladen und installiert\e[0m"
-
+echo ""
+echo -e "\e[1;100m#Docker wird installiert\e[0m"
 apt install docker.io -y > /dev/null
+if [ $? -eq 0 ]; then
+   echo -e "\e[1;32m#Erfolgreich\e[0m"
+else
+   echo -e "\e[0;31m#Fehler\e[0m"
+fi
+
+echo -e "\e[1;100m#Docker Compose wird installiert\e[0m"
 apt install docker-compose -y > /dev/null
+if [ $? -eq 0 ]; then
+   echo -e "\e[1;32m#Erfolgreich\e[0m"
+else
+   echo -e "\e[0;31m#Fehler\e[0m"
+fi
+
+echo -e "\e[1;100m#unattended-upgrades wird installiert\e[0m"
+apt install unattended-upgrades -y > /dev/null
+if [ $? -eq 0 ]; then
+   echo -e "\e[1;32m#Erfolgreich\e[0m"
+else
+   echo -e "\e[0;31m#Fehler\e[0m"
+fi
 
 # Wireguard UI Konfigurieren
 echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
 
-[ -f /root/wireguard-ui/docker-compose.yml ] || wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/docker-compose.yml -P /root/wireguard-ui
-[ -f /etc/systemd/system/wgui.path ] || wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -P /etc/systemd/system/
-[ -f /etc/systemd/system/wgui.service ] || wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -P /etc/systemd/system/
+wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/docker-compose.yml -P /root/wireguard-ui -O docker-compose.yml
+wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -P /etc/systemd/system/ -O wgui.path
+wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -P /etc/systemd/system/ -O wgui.service
+wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/50-unattended-upgrades -P /etc/apt/apt.conf.d/ -O 50-unattended-upgrades
 
 cd /root/wireguard-ui
 docker-compose up -d
