@@ -1,9 +1,9 @@
 #!/bin/sh
 COLUMNS=$(tput cols) 
-title="Hello world!" 
+title="\e[1;32mWillkommen Zum Wirguard Easy-Installer\e[0m" 
 printf "%*s\n" $(((${#title}+$COLUMNS)/2)) "$title"
 
-echo -e "\e[1;100mWillkommen Zum Wirguard Easy-Installer\e[0m"
+echo -e ""
 echo -e "\e[100mDieser Installer wird Wireguard-Server, Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren.\e[0m"
 
 
