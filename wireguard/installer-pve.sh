@@ -47,7 +47,7 @@ echo -e ""
 
 
 
-read -p "                                       Wollen Sie fortfahren? (j/n)         " A
+read -p "                            Wollen Sie fortfahren? (j/n)         " A
 if [ "$A" == "" -o "$A" == "j" ] || [ "$A" == "" -o "$A" == "y" ];then
 
     # Updaten
