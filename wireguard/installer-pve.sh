@@ -29,7 +29,7 @@ function print_centered {
 printf "\033c"
 
 ##============================= Header ==============================##
-print_centered "wireguard-pve-install V1.0.0 Stand 08.11.2021                                                                             2021 forum.iobroker.net/user/crunkfx" " "
+print_centered "wireguard-pve-install V1.0.1 Stand 08.11.2021                                                                             2021 forum.iobroker.net/user/crunkfx" " "
 echo -e ""
 
 print_centered "-" "-"
@@ -102,19 +102,24 @@ fi
 # Wireguard UI Konfigurieren
 echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
 
-wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/docker-compose.yml -P /root/wireguard-ui -O docker-compose.yml
-wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -P /etc/systemd/system/ -O wgui.path
-wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -P /etc/systemd/system/ -O wgui.service
-wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/50-unattended-upgrades -P /etc/apt/apt.conf.d/ -O 50-unattended-upgrades
+wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/docker-compose.yml -O /root/wireguard-ui/docker-compose.yml
+wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -O /etc/systemd/system/wgui.path
+wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -O /etc/systemd/system/wgui.service
+wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/50-unattended-upgrades -O /etc/apt/apt.conf.d/50-unattended-upgrades
 
+mkdir /root/wireguard-ui
 cd /root/wireguard-ui
 docker-compose up -d
 
+systemctl enable wgui.{path,service}
+systemctl start wgui.{path,service}
 # Firewallregeln setzen
 echo -e "\e[1;100m#### 4.   Firewallregeln werden gesetzt\e[0m"
 ufw allow 51821/udp
 ufw allow 5000/tcp
 ufw enable
+
+
 
 # WireGuard Installer Starten
 echo -e "\e[1;100m#### 5.   Wireguard Installer wird gestartet\e[0m"
