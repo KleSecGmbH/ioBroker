@@ -47,7 +47,7 @@ echo -e ""
 
 
 
-read -p "######################         Wollen Sie fortfahren? (j/n)         ######################" A
+read -p "                                                        Wollen Sie fortfahren? (j/n)         " A
 if [ "$A" == "" -o "$A" == "j" ];then
 
     # Updaten
@@ -71,7 +71,7 @@ echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
 [ -f /etc/systemd/system/wgui.service ] || wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -P /etc/systemd/system/
 
 cd /root/wireguard-ui
-docker-compose
+docker-compose up -d
 
 # WireGuard Installer Starten
 echo -e "\e[1;100m#### 4.   Wireguard Installer wird gestartet\e[0m"
