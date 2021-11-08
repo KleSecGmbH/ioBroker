@@ -1,22 +1,31 @@
 #!/bin/sh
 
-# Terminal leermachen
+##========================== Variablen =============================##
+
+BLANK='\033[0m'
+YELLOW='\033[1;33m'
+GRAY='\033[0;37m'
+GRAY_R='\033[39m'
+WHITE_R='\033[39m'
+RED='\033[1;31m' # Light Red.
+GREEN='\033[1;32m' # Light Green.
+BOLD='\e[1m'
+
+
+##====================== Terminal leermachen ========================##
 printf "\033c"
 
 ##======================= Farben definieren =========================##
-blue=$(tput setaf 4)
-normal=$(tput sgr0)
-
-COLUMNS=$(tput cols) 
-title="Willkommen Zum Wirguard Easy-Installer" 
-printf "%*s\n" $(((${#title}+$COLUMNS)/2)) "${blue}$title"
-
+echo -e "wireguard-pve-install V1.0.0 Stand 08.11.2021                                                                             2021 forum.iobroker.net/user/crunkfx"
 echo -e ""
-echo -e "\e[100mDieser Installer wird Wireguard-Server, Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren.\e[0m"
+echo -e ""
+echo -e "\t\t\t\t\tWillkommen zum WireGuard Easy-Installer"
+echo -e ""
+echo -e "\e[100m\t\t\tDieser Installer wird Wireguard-Server, Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren.\e[0m"
 
 
 
-read -p "                                           Wollen Sie fortfahren?" A
+read -p "                                  Wollen Sie fortfahren?" A
 if [ "$A" == "" -o "$A" == "j" ];then
 
     # Updaten
