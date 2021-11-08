@@ -8,8 +8,8 @@ blue=$(tput setaf 4)
 normal=$(tput sgr0)
 
 COLUMNS=$(tput cols) 
-title="\e[1;32mWillkommen Zum Wirguard Easy-Installer\e[0m" 
-printf "%*s\n" $(((${#title}+$COLUMNS)/2)) "$title"
+title="Willkommen Zum Wirguard Easy-Installer" 
+printf "%*s\n" $(((${#title}+$COLUMNS)/2)) "${blue}$title"
 
 echo -e ""
 echo -e "\e[100mDieser Installer wird Wireguard-Server, Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren.\e[0m"
