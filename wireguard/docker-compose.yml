@@ -14,3 +14,6 @@ services:
       - ./db:/app/db
       - /etc/wireguard:/etc/wireguard
     restart: always
+    cap_add:
+      - NET_ADMIN
+      network_mode: host
