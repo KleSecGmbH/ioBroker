@@ -13,3 +13,4 @@ services:
     volumes:
       - ./db:/app/db
       - /etc/wireguard:/etc/wireguard
+    restart: always
