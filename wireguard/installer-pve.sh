@@ -1,5 +1,6 @@
 #!/bin/sh
 
+##=== Funktion zum zentrieren von Text von github.com/TrinityCoder ==##
 function print_centered {
      [[ $# == 0 ]] && return 1
 
@@ -24,37 +25,32 @@ function print_centered {
      return 0
 }
 
-##========================== Variablen =============================##
-
-BLANK='\033[0m'
-YELLOW='\033[1;33m'
-GRAY='\033[0;37m'
-GRAY_R='\033[39m'
-WHITE_R='\033[39m'
-RED='\033[1;31m' # Light Red.
-GREEN='\033[1;32m' # Light Green.
-BOLD='\e[1m'
-
-
 ##====================== Terminal leermachen ========================##
 printf "\033c"
-print_centered "Hallo" "#"
 
+##============================= Header ==============================##
+print_centered "wireguard-pve-install V1.0.0 Stand 08.11.2021                                                                             2021 forum.iobroker.net/user/crunkfx" " "
+echo -e ""
+
+print_centered "#" "#"
+print_centered "                                                               " "#"
+print_centered "            Willkommen zum WireGuard Easy-Installer            " "#"
+print_centered "                                                               " "#"
+print_centered "#" "#"
 ##======================= Farben definieren =========================##
-echo -e "wireguard-pve-install V1.0.0 Stand 08.11.2021                                                                             2021 forum.iobroker.net/user/crunkfx"
 echo -e ""
 echo -e ""
-echo -e "\t\t\t\t\tWillkommen zum WireGuard Easy-Installer"
 echo -e ""
-echo -e "\e[100m\t\t\tDieser Installer wird Wireguard-Server, Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren.\e[0m"
+print_centered "Dieser Installer wird Wireguard-Server, Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren." " "
 
 
 
-read -p "                                  Wollen Sie fortfahren?" A
+
+read -p "                                           Wollen Sie fortfahren?" A
 if [ "$A" == "" -o "$A" == "j" ];then
 
     # Updaten
-echo -e "\e[1;100mUpdates werden goholt und Installiert\e[0m"
+echo -e "\e[1;100mUpdates werden geholt und Installiert\e[0m"
 
 
 apt update
