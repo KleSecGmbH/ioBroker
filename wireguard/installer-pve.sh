@@ -1,10 +1,18 @@
 #!/bin/sh
 
-# Updaten
-echo -e "\e[32mGreen"
+echo -e "\e[1;100mWillkommen Zum Wirguard Easy-Installer"
+echo -e "\e[100mDieser Installer wird Wireguard-Server, Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren."
 
-F_VDOBLE="\033#6"
-printf "${F_VDOBLE}Esto es...\n"
+read -p "Wollen Sie fortfahren?" A
+if [ "$A" == "" -o "$A" == "j" ];then
+    return
+else
+    echo -e "\e[1;41mInstallation abgebrochen!"
+fi
+
+# Updaten
+echo -e "\e[1;100mUpdates werden goholt und Installiert"
+
 
 apt update
 apt upgrade -y
