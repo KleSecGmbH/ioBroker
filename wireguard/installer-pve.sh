@@ -1,16 +1,18 @@
 #!/bin/sh
-for i in {16..21} {21..16} ; do echo -en "\e[41;5;${i}m \e[0m" ; done ; echo
+COLUMNS=$(tput cols) 
+title="Hello world!" 
+printf "%*s\n" $(((${#title}+$COLUMNS)/2)) "$title"
 
-echo -e "\e[1;100m                              Willkommen Zum Wirguard Easy-Installer"
-echo -e "\e[100mDieser Installer wird Wireguard-Server, Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren."
+echo -e "\e[1;100mWillkommen Zum Wirguard Easy-Installer\e[0m"
+echo -e "\e[100mDieser Installer wird Wireguard-Server, Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren.\e[0m"
 
-for i in {16..21} {21..16} ; do echo -en "\e[41;5;${i}m \e[0m" ; done ; echo
+
 
 read -p "                                           Wollen Sie fortfahren?" A
 if [ "$A" == "" -o "$A" == "j" ];then
 
     # Updaten
-echo -e "\e[1;100mUpdates werden goholt und Installiert"
+echo -e "\e[1;100mUpdates werden goholt und Installiert\e[0m"
 
 
 apt update
@@ -33,7 +35,7 @@ wget git.io/wireguard -O wireguard-install.sh
 bash wireguard-install.sh
 
 else
-    echo -e "\e[1;41mInstallation abgebrochen!"
+    echo -e "\e[1;41mInstallation abgebrochen!\e[0m"
     exit 1
 fi
 
