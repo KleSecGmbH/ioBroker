@@ -101,13 +101,13 @@ fi
 
 # Wireguard UI Konfigurieren
 echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
-
+mkdir /root/wireguard-ui
 wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/docker-compose.yml -O /root/wireguard-ui/docker-compose.yml
 wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -O /etc/systemd/system/wgui.path
 wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -O /etc/systemd/system/wgui.service
 wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/50-unattended-upgrades -O /etc/apt/apt.conf.d/50-unattended-upgrades
 
-mkdir /root/wireguard-ui
+
 cd /root/wireguard-ui
 docker-compose up -d
 
