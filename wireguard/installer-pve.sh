@@ -73,8 +73,14 @@ echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
 cd /root/wireguard-ui
 docker-compose up -d
 
+# Firewallregeln setzen
+echo -e "\e[1;100m#### 4.   Firewallregeln werden gesetzt\e[0m"
+ufw allow 51821/udp
+ufw allow 5000/tcp
+ufw enable
+
 # WireGuard Installer Starten
-echo -e "\e[1;100m#### 4.   Wireguard Installer wird gestartet\e[0m"
+echo -e "\e[1;100m#### 5.   Wireguard Installer wird gestartet\e[0m"
 sleep 5
 wget git.io/wireguard -O wireguard-install.sh 
 bash wireguard-install.sh
