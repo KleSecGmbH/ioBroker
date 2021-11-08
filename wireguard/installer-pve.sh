@@ -5,9 +5,10 @@ echo -e "\e[100mDieser Installer wird Wireguard-Server, Wireguard-UI, sowie alle
 
 read -p "Wollen Sie fortfahren?" A
 if [ "$A" == "" -o "$A" == "j" ];then
-    return
+    break
 else
     echo -e "\e[1;41mInstallation abgebrochen!"
+    exit 1
 fi
 
 # Updaten
