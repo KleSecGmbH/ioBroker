@@ -3,7 +3,7 @@
 #            Variablen           #
 ##################################
 
-INSTALLER_VERSION = "wireguard-ui-install V1.0.1 Stand 18.11.2021                                                                             2021 forum.iobroker.net/user/crunkfx" " "
+INSTALLER_VERSION="wireguard-ui-install V1.0.1 Stand 18.11.2021                                                                             2021 forum.iobroker.net/user/crunkfx" " "
 
 # Altes Installationsverzeichnis
 OLDDIR="/root/wireguard-ui"
@@ -147,7 +147,7 @@ function change_pw {
                         "username": "$user_name",
                         "password": "$pass_word"
                 }
-        EOF
+EOF
 
         cd /opt/wireguard-ui
         docker-compose up -d
