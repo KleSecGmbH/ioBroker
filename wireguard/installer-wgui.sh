@@ -105,16 +105,31 @@ wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/docker
 wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -O /etc/systemd/system/wgui.path
 wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -O /etc/systemd/system/wgui.service
 
-echo -e "\n    environment:\n    - WGUI_USERNAME=alpha\n    - WGUI_PASSWORD=testthis-unusual-password" >> /root/wireguard-ui/docker-compose.yml
-
 cd /root/wireguard-ui
+
 docker-compose up -d
+
 
 systemctl enable wgui.{path,service}
 systemctl start wgui.{path,service}
 }
 
 ############# WGUI installieren ende
+
+############# Anmeldedaten ändern
+function change_pw {
+docker kill wgui
+rm /root/wireguard-ui/db/server/users.json
+read -p "Benutzername eingeben: " user_name
+read -p "Passwort eingeben: " pass_word
+cat << EOF >> /root/wireguard-ui/db/server/users.json
+{
+        "username": "$user_name",
+        "password": "$pass_word"
+}
+EOF
+}
+############# Anmeldedaten ändern
 
 ##################################
 ########### Programm #############
@@ -146,10 +161,10 @@ select opt in "${options[@]}"
 do
     case $opt in
         "WireGuard UI installieren")
-            
-            update_system
-            getPackets
-            install_wgui
+            change_pw
+            #update_system
+            #getPackets
+            #install_wgui
             ;;
         "Option 2")
             echo "OK WireGuard UI wird neu-installiert"
