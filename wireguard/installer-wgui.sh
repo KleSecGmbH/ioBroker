@@ -147,7 +147,7 @@ function change_pw {
                         "username": "$user_name",
                         "password": "$pass_word"
                 }
-EOF
+        EOF
 
         cd /opt/wireguard-ui
         docker-compose up -d
