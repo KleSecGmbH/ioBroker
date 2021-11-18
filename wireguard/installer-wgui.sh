@@ -145,7 +145,7 @@ options=("WireGuard UI installieren" "WireGuard UI neu-installieren" "WireGuard 
 select opt in "${options[@]}"
 do
     case $opt in
-        "Option 1")
+        "WireGuard UI installieren")
             echo "OK WireGuard UI wird installiert"
             update_system
             getPackets
