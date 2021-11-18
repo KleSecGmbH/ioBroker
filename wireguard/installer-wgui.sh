@@ -3,7 +3,7 @@
 #            Variablen           #
 ##################################
 
-INSTALLER_VERSION="wireguard-ui-install V1.0.1 Stand 18.11.2021                                                                             2021 forum.iobroker.net/user/crunkfx" " "
+INSVER="wireguard-ui-install V1.0.1 Stand 18.11.2021                                                                             2021 forum.iobroker.net/user/crunkfx" " "
 
 # Altes Installationsverzeichnis
 OLDDIR="/root/wireguard-ui"
@@ -183,7 +183,7 @@ apt install dialog
 DIALOG_HEIGHT=15
 DIALOG_WIDTH=40
 DIALOG_CHOICE_HEIGHT=4
-DIALOG_BACKTITLE=$INSTALLER_VERSION
+DIALOG_BACKTITLE="$INSVER"
 DIALOG_TITLE="Willkommen zum WireGuard UI-Installer"
 DIALOG_MENU="Was soll getan werden? :"
 
