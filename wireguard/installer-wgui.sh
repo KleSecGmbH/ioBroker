@@ -142,12 +142,12 @@ function change_pw {
         rm /opt/wireguard-ui/db/server/users.json
         user_name=$(dialog --inputbox "Neuen Benutzernamen eingeben:" 10 30 3>&1 1>&2 2>&3 3>&-)
         pass_word=$(dialog --passwordbox "Neues Passwort eingeben:" 10 30 3>&1- 1>&2- 2>&3-)
-        cat <<-'EOF' >/opt/wireguard-ui/db/server/users.json
-                {
+        cat <<EOF >/opt/wireguard-ui/db/server/users.json
+        {
                         "username": "$user_name",
                         "password": "$pass_word"
-                }
-EOF
+        }
+        EOF
 
         cd /opt/wireguard-ui
         docker-compose up -d
