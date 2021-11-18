@@ -121,7 +121,8 @@ function change_pw {
 docker kill wgui
 rm /root/wireguard-ui/db/server/users.json
 read -p "Benutzername eingeben: " user_name
-read -s -p 'Password please: ' pass_word
+echo Passowrt eingeben
+read -s pass_word
 cat << EOF >> /root/wireguard-ui/db/server/users.json
 {
         "username": "$user_name",
