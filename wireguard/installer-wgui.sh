@@ -194,10 +194,10 @@ OPTIONS=(1 "Wireguard UI installieren"
     4 "Installer verlassen")
 
 CHOICE=$(dialog --clear \
-    --backtitle "$BACKTITLE" \
-    --title "$TITLE" \
-    --menu "$MENU" \
-    $HEIGHT $WIDTH $CHOICE_HEIGHT \
+    --backtitle "$DIALOG_BACKTITLE" \
+    --title "$DIALOG_TITLE" \
+    --menu "$DIALOG_MENU" \
+    $DIALOG_HEIGHT $DIALOG_WIDTH $DIALOG_CHOICE_HEIGHT \
     "${OPTIONS[@]}" \
     2>&1 >/dev/tty)
 
