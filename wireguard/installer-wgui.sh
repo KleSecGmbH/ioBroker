@@ -190,7 +190,7 @@ DIALOG_MENU="Was soll getan werden? :"
 OPTIONS=(1 "Wireguard UI installieren"
     2 "Wireguard UI deinstallieren"
     3 "Wireguard UI neu-installieren"
-    4 "Wireguard UI Anmeldedaten aendern"
+    4 "Wireguard UI Anmeldedaten ändern"
     4 "Installer verlassen")
 
 CHOICE=$(dialog --clear \
