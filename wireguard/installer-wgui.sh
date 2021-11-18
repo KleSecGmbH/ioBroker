@@ -121,13 +121,15 @@ function change_pw {
 docker kill wgui
 rm /root/wireguard-ui/db/server/users.json
 read -p "Benutzername eingeben: " user_name
-read -p "Passwort eingeben: " pass_word
+read -s "Passwort eingeben: " pass_word
 cat << EOF >> /root/wireguard-ui/db/server/users.json
 {
         "username": "$user_name",
         "password": "$pass_word"
 }
 EOF
+cd /root/wireguard-ui
+docker-compose up -d
 }
 ############# Anmeldedaten ändern
 
@@ -165,6 +167,7 @@ do
             #update_system
             #getPackets
             #install_wgui
+            exit
             ;;
         "Option 2")
             echo "OK WireGuard UI wird neu-installiert"
@@ -172,13 +175,14 @@ do
             getPackets
             remove_wgui
             install_wgui
+            break
             ;;
         "Option 3")
             echo "OK WireGuard UI wird entfernt"
             remove_wgui
             ;;
         "Quit")
-            exit
+            break
             ;;
         *) echo "Die Option $REPLY stand nicht zur auswahl :] ";;
     esac
