@@ -105,7 +105,7 @@ wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/docker
 wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -O /etc/systemd/system/wgui.path
 wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -O /etc/systemd/system/wgui.service
 
-echo -e "this is a new line \nthis is another new line" >> /root/wireguard-ui/docker-compose.yml
+echo -e "\n    environment:\n    - WGUI_USERNAME=alpha\n    - WGUI_PASSWORD=testthis-unusual-password" >> /root/wireguard-ui/docker-compose.yml
 
 cd /root/wireguard-ui
 docker-compose up -d
