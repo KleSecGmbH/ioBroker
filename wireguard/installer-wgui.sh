@@ -138,17 +138,12 @@ function change_pw {
 
         if [ "$(docker ps -aq -f status=running -f name=wgui)" ]; then
             docker kill wgui
-        fi
+        fi  
         rm /opt/wireguard-ui/db/server/users.json
         user_name=$(dialog --inputbox "Neuen Benutzernamen eingeben:" 10 30 3>&1 1>&2 2>&3 3>&-)
         pass_word=$(dialog --passwordbox "Neues Passwort eingeben:" 10 30 3>&1- 1>&2- 2>&3-)
-        cat <<EOF >/opt/wireguard-ui/db/server/users.json
-        {
-                        "username": "$user_name",
-                        "password": "$pass_word"
-        }
-        EOF
-
+        touch /opt/wireguard-ui/db/server/users.json
+        echo -e "{\n                "username": "$user_name",\n                "password": "$pass_word"\n}" >> /opt/wireguard-ui/db/server/users.json
         cd /opt/wireguard-ui
         docker-compose up -d
 
