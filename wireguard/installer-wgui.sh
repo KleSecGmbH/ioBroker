@@ -3,7 +3,7 @@
 #            Variablen           #
 ##################################
 
-INSVER="wireguard-ui-install V1.0.1 Stand 18.11.2021                                                                             2021 forum.iobroker.net/user/crunkfx" " "
+
 
 # Altes Installationsverzeichnis
 OLDDIR="/root/wireguard-ui"
@@ -174,23 +174,23 @@ EOF
 
 # Dialog installieren
 apt install dialog
-
+export LANG=C.UTF-8
 # ============================== #
 ##################################
 #         Start Dialog           #
 ##################################
 
 DIALOG_HEIGHT=15
-DIALOG_WIDTH=40
+DIALOG_WIDTH=60
 DIALOG_CHOICE_HEIGHT=4
-DIALOG_BACKTITLE="$INSVER"
+DIALOG_BACKTITLE="wireguard-ui-install V1.0.1 Stand 18.11.2021     @2021 forum.iobroker.net/user/crunkfx" " "
 DIALOG_TITLE="Willkommen zum WireGuard UI-Installer"
 DIALOG_MENU="Was soll getan werden? :"
 
 OPTIONS=(1 "Wireguard UI installieren"
     2 "Wireguard UI deinstallieren"
     3 "Wireguard UI neu-installieren"
-    4 "Wireguard UI Anmeldedaten ändern"
+    4 "Wireguard UI Anmeldedaten aendern"
     4 "Installer verlassen")
 
 CHOICE=$(dialog --clear \
