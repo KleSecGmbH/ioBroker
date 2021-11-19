@@ -99,14 +99,14 @@ function remove_wgui {
         fi
         docker rm wgui
         rm -r /opt/wireguard-ui
-        dialog --backtitle $INSTAVER \
+        dialog --backtitle "$INSTAVER" \
         --title "Deinstallation abgeschlossen" \
         --msgbox 'Wireguard-UI wurde erfolgreich entfernt!' 15 60
         exit_clear
     else
         
         dialog --title "WireGuard UI ist nicht installiert." \
-        --backtitle $INSTAVER \
+        --backtitle "$INSTAVER" \
         --yesno "Soll das getan werden?" 15 60
         response=$?
         case $response in
@@ -123,7 +123,7 @@ function remove_wgui {
 ############# WGUI installieren
 function install_wgui {
     dialog --title "Wollen Sie fortfahren?" \
-    --backtitle $INSTAVER \
+    --backtitle "$INSTAVER" \
     --yesno "Dieser Installer wird Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren." 15 60
     response=$?
     case $response in
@@ -154,12 +154,12 @@ function wgui_installer {
     systemctl enable wgui.{path,service}
     systemctl start wgui.{path,service}
     if [ "$(docker ps -aq -f status=running -f name=wgui)" ]; then
-        dialog --backtitle $INSTAVER \
+        dialog --backtitle "$INSTAVER" \
         --title "Installation abgeschlossen" \
         --msgbox 'Die Installation wurde erfolgreich abgeschlossen!' 15 60
         
     else
-        dialog --backtitle $INSTAVER \
+        dialog --backtitle "$INSTAVER" \
         --title "ERROR" \
         --msgbox 'Ups. Irgendwas ist da schiefgeleufen ;(' 15 60
     fi
@@ -187,6 +187,9 @@ function change_pw {
         echo -e "{\n                \"username\": \"$user_name\",\n                \"password\": \"$pass_word\"\n}" >>/opt/wireguard-ui/db/server/users.json
         cd /opt/wireguard-ui
         docker-compose up -d
+        dialog --backtitle "$INSTAVER" \
+        --title "Fertig" \
+        --msgbox 'Die Anmeldedaten wurden erfolgreich geändert!' 15 60
         exit_clear
     else
         
@@ -238,7 +241,7 @@ OPTIONS=(1 "Wireguard UI installieren"
     2 "Wireguard UI deinstallieren"
     3 "Wireguard UI neu-installieren"
     4 "Wireguard UI Anmeldedaten ändern"
-5 "Installer verlassen")
+    5 "Installer verlassen")
 
 CHOICE=$(dialog --clear \
     --backtitle "$INSTAVER" \
@@ -250,7 +253,9 @@ CHOICE=$(dialog --clear \
 
 clear
 case $CHOICE in
-    1) install_wgui ;;
+    1) install_wgui 
+    
+    ;;
     
     2)
         remove_wgui
