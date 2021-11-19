@@ -98,7 +98,7 @@ function remove_wgui {
             docker kill wgui
         fi
         docker rm wgui
-        rm -r $DIR
+        rm -r /opt/wireguard-ui
 
 
     else
