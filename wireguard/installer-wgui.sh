@@ -130,7 +130,7 @@ function install_wgui {
         255) exit ;;
         esac
 
-    fi
+    
 
     ############# WGUI installieren ende
 
