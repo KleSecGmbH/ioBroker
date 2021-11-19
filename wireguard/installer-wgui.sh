@@ -2,7 +2,7 @@
 ##################################
 #            Variablen           #
 ##################################
-INSTAVER="wireguard-ui-install V1.0.1 Stand 18.11.2021     @2021 forum.iobroker.net/user/crunkfx"
+INSTAVER="wireguard-ui-install V1.0.2R038 Stand 19.11.2021     @2021 forum.iobroker.net/user/crunkfx"
 # Altes Installationsverzeichnis
 OLDDIR="/root/wireguard-ui"
 
@@ -117,13 +117,24 @@ function install_wgui {
 function wgui_installer {
     update_system
     getPackets
+    if [ "$(docker ps -aq -f status=running -f name=wgui)" ]; then
+        dialog --title "WireGuard UI ist bereits installiert." \
+        --backtitle "$INSTAVER" \
+        --yesno "Soll es erneut installiert werden?" 15 60
+        response=$?
+        case $response in
+            0) remove_wgui ;;
+            1) exit_clear ;;
+            255) exit_clear ;;
+        esac
+    fi
     echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
-    mkdir /root/wireguard-ui
+    mkdir /opt/wireguard-ui
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/docker-compose.yml -O /root/wireguard-ui/docker-compose.yml
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -O /etc/systemd/system/wgui.path
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -O /etc/systemd/system/wgui.service
     
-    cd /root/wireguard-ui
+    cd /opt/wireguard-ui
     
     docker-compose up -d
     
@@ -146,10 +157,7 @@ function wgui_installer {
 function change_pw {
     
     # Verschieben falls alter Installationsordner
-    if [ -d "$OLDDIR" ]; then
-        mv $OLDDIR $DIR
-        
-    fi
+
     
     if [ -d "$DIR" ]; then
         
@@ -170,7 +178,7 @@ function change_pw {
     else
         
         dialog --title "WireGuard UI ist nicht installiert." \
-        --backtitle "wireguard-ui-install V1.0.1 Stand 18.11.2021     @2021 forum.iobroker.net/user/crunkfx" \
+        --backtitle "$INSTAVER" \
         --yesno "Soll das getan werden?" 15 60
         response=$?
         case $response in
