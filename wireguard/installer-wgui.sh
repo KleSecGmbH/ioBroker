@@ -86,7 +86,7 @@ function getPackets {
 ############# Pakete laden ende
 
 ############# WGUI entfernen
-function remove_wgui {´
+function remove_wgui {
     if [ -d "$OLDDIR" ]; then
         mv $OLDDIR $DIR
 
