@@ -136,8 +136,7 @@ function install_wgui {
     
 }
 
-function wgui_installer{
-    update_system
+function wgui_installer {
     getPackets
     echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
     mkdir /root/wireguard-ui
