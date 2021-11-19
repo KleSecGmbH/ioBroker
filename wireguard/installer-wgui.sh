@@ -2,7 +2,7 @@
 ##################################
 #            Variablen           #
 ##################################
-INSTAVER="wireguard-ui-install V1.0.2R038 Stand 19.11.2021     @2021 forum.iobroker.net/user/crunkfx"
+INSTAVER="wireguard-ui-install V1.0.2R039 Stand 19.11.2021     @2021 forum.iobroker.net/user/crunkfx"
 # Altes Installationsverzeichnis
 OLDDIR="/root/wireguard-ui"
 
@@ -130,7 +130,7 @@ function wgui_installer {
     fi
     echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
     mkdir /opt/wireguard-ui
-    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/docker-compose.yml -O /root/wireguard-ui/docker-compose.yml
+    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/docker-compose.yml -O /opt/wireguard-ui/docker-compose.yml
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -O /etc/systemd/system/wgui.path
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -O /etc/systemd/system/wgui.service
     
@@ -245,7 +245,6 @@ case $CHOICE in
         remove_wgui
     ;;
     3)
-        remove_wgui
         install_wgui
     ;;
     4) change_pw ;;
