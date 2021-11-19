@@ -2,7 +2,7 @@
 ##################################
 #            Variablen           #
 ##################################
-
+INSTAVER="wireguard-ui-install V1.0.1 Stand 18.11.2021     @2021 forum.iobroker.net/user/crunkfx"
 # Altes Installationsverzeichnis
 OLDDIR="/root/wireguard-ui"
 
@@ -99,18 +99,20 @@ function remove_wgui {
         fi
         docker rm wgui
         rm -r /opt/wireguard-ui
-        
-        
+        dialog --backtitle $INSTAVER \
+        --title "Deinstallation abgeschlossen" \
+        --msgbox 'Wireguard-UI wurde erfolgreich entfernt!' 15 60
+        exit_clear
     else
         
         dialog --title "WireGuard UI ist nicht installiert." \
-        --backtitle "wireguard-ui-install V1.0.1 Stand 18.11.2021     @2021 forum.iobroker.net/user/crunkfx" \
-        --yesno "Soll das getan werden?" 10 30
+        --backtitle $INSTAVER \
+        --yesno "Soll das getan werden?" 15 60
         response=$?
         case $response in
             0) install_wgui ;;
-            1) exit ;;
-            255) exit ;;
+            1) exit_clear ;;
+            255) exit_clear ;;
         esac
         
     fi
@@ -121,13 +123,13 @@ function remove_wgui {
 ############# WGUI installieren
 function install_wgui {
     dialog --title "Wollen Sie fortfahren?" \
-    --backtitle "wireguard-ui-install V1.0.1 Stand 18.11.2021     @2021 forum.iobroker.net/user/crunkfx" \
-    --yesno "Dieser Installer wird Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren." 10 30
+    --backtitle $INSTAVER \
+    --yesno "Dieser Installer wird Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren." 15 60
     response=$?
     case $response in
         0) wgui_installer ;;
-        1) exit ;;
-        255) exit ;;
+        1) exit_clear ;;
+        255) exit_clear ;;
     esac
     
     
@@ -137,6 +139,7 @@ function install_wgui {
 }
 
 function wgui_installer {
+    update_system
     getPackets
     echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
     mkdir /root/wireguard-ui
@@ -150,6 +153,17 @@ function wgui_installer {
     
     systemctl enable wgui.{path,service}
     systemctl start wgui.{path,service}
+    if [ "$(docker ps -aq -f status=running -f name=wgui)" ]; then
+        dialog --backtitle $INSTAVER \
+        --title "Installation abgeschlossen" \
+        --msgbox 'Die Installation wurde erfolgreich abgeschlossen!' 15 60
+        
+    else
+        dialog --backtitle $INSTAVER \
+        --title "ERROR" \
+        --msgbox 'Ups. Irgendwas ist da schiefgeleufen ;(' 15 60
+    fi
+    exit_clear
 }
 
 # Anmeldedaten ändern
@@ -168,26 +182,31 @@ function change_pw {
         fi
         rm /opt/wireguard-ui/db/server/users.json
         touch /opt/wireguard-ui/db/server/users.json
-        user_name=$(dialog --inputbox "Neuen Benutzernamen eingeben:" 10 30 3>&1 1>&2 2>&3 3>&-)
-        pass_word=$(dialog --passwordbox "Neues Passwort eingeben:" 10 30 3>&1- 1>&2- 2>&3-)
+        user_name=$(dialog --inputbox "Neuen Benutzernamen eingeben:" 15 60 3>&1 1>&2 2>&3 3>&-)
+        pass_word=$(dialog --passwordbox "Neues Passwort eingeben:" 15 60 3>&1- 1>&2- 2>&3-)
         echo -e "{\n                \"username\": \"$user_name\",\n                \"password\": \"$pass_word\"\n}" >>/opt/wireguard-ui/db/server/users.json
         cd /opt/wireguard-ui
         docker-compose up -d
-        
+        exit_clear
     else
         
         dialog --title "WireGuard UI ist nicht installiert." \
         --backtitle "wireguard-ui-install V1.0.1 Stand 18.11.2021     @2021 forum.iobroker.net/user/crunkfx" \
-        --yesno "Soll das getan werden?" 10 30
+        --yesno "Soll das getan werden?" 15 60
         response=$?
         case $response in
             0) install_wgui ;;
-            1) exit ;;
-            255) exit ;;
+            1) exit_clear ;;
+            255) exit_clear ;;
         esac
         
     fi
     
+}
+
+function exit_clear {
+    printf "\033c"
+    exit
 }
 # Anmeldedaten ändern ende
 
@@ -212,7 +231,6 @@ export LANG=C.UTF-8
 DIALOG_HEIGHT=15
 DIALOG_WIDTH=60
 DIALOG_CHOICE_HEIGHT=4
-DIALOG_BACKTITLE="wireguard-ui-install V1.0.1 Stand 18.11.2021     @2021 forum.iobroker.net/user/crunkfx"
 DIALOG_TITLE="Willkommen zum WireGuard UI-Installer"
 DIALOG_MENU="Was soll getan werden? :"
 
@@ -223,7 +241,7 @@ OPTIONS=(1 "Wireguard UI installieren"
 5 "Installer verlassen")
 
 CHOICE=$(dialog --clear \
-    --backtitle "$DIALOG_BACKTITLE" \
+    --backtitle "$INSTAVER" \
     --title "$DIALOG_TITLE" \
     --menu "$DIALOG_MENU" \
     $DIALOG_HEIGHT $DIALOG_WIDTH $DIALOG_CHOICE_HEIGHT \
@@ -232,9 +250,7 @@ CHOICE=$(dialog --clear \
 
 clear
 case $CHOICE in
-    1)
-        install_wgui
-    ;;
+    1) install_wgui ;;
     
     2)
         remove_wgui
@@ -242,13 +258,11 @@ case $CHOICE in
     3)
         remove_wgui
         install_wgui
-        4)
-            change_pw
-        ;;
-        5)
-            printf "\033c"
-            exit
-        ;;
+    ;;
+    4) change_pw ;;
+    5)
+        exit_clear
+    ;;
 esac
 
 ##################################
