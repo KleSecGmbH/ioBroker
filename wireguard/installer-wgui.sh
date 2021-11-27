@@ -106,8 +106,8 @@ function keepfiles {
         --yesno "Sollen die Konfigurationsdateien behalten werden?" 15 60
         response=$?
         case $response in
-            0) remove_wgui_toReinstall ;;
-            1) keepFilesandReinstall ;;
+            0) keepFilesandReinstall ;;
+            1) remove_wgui_toReinstall ;;
             255) exit_clear ;;
         esac
     else
@@ -129,7 +129,7 @@ function wgui_installer {
             255) exit_clear ;;
         esac
     fi
-    
+    systemctl stop wireguard-ui
     update_system
     echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
     mkdir /opt/wireguard-ui
@@ -148,7 +148,7 @@ function wgui_installer {
     cd /opt/wireguard-ui
     tar -xf install.tar.gz
     rm install.tar.gz
-    
+
     systemctl daemon-reload
     systemctl enable wgui.{path,service}
     systemctl start wgui.{path,service}
