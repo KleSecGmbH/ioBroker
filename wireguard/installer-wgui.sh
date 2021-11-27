@@ -2,12 +2,13 @@
 ##################################
 #            Variablen           #
 ##################################
-INSTAVER="wireguard-ui-install V1.0.2R040 Stand 19.11.2021     @2021 forum.iobroker.net/user/crunkfx"
+INSTAVER="wireguard-ui-install V1.0.3 Stand 27.11.2021     @2021 forum.iobroker.net/user/crunkfx"
 # Altes Installationsverzeichnis
 OLDDIR="/root/wireguard-ui"
 
 # Neues Installationsverzeichnis
 DIR="/opt/wireguard-ui"
+FILE="/opt/wireguard-ui/wireguard-ui"
 
 
 
@@ -40,42 +41,12 @@ function update_system {
 }
 ############# Update Ende
 
-############# Pakete laden
-function getPackets {
-    # Pakete laden
-    echo -e "\e[1;100m#### 2.   Die erforderlichen Pakete werden geladen und installiert\e[0m"
-    echo ""
-    echo -e "\e[1;104m#Docker wird installiert\e[0m"
-    apt install docker.io -y >/dev/null
-    if [ $? -eq 0 ]; then
-        echo -e "\e[1;32m#Erfolgreich\e[0m"
-    else
-        echo -e "\e[0;31m#Fehler\e[0m"
-    fi
-    
-    echo -e "\e[1;104m#Docker Compose wird installiert\e[0m"
-    apt install docker-compose -y >/dev/null
-    if [ $? -eq 0 ]; then
-        echo -e "\e[1;32m#Erfolgreich\e[0m"
-    else
-        echo -e "\e[0;31m#Fehler\e[0m"
-    fi
-}
-############# Pakete laden ende
 
 ############# WGUI entfernen
 function remove_wgui {
-    if [ -d "$OLDDIR" ]; then
-        mv $OLDDIR $DIR
-        
-    fi
-    
     if [ -d "$DIR" ]; then
-        
-        if [ "$(docker ps -aq -f status=running -f name=wgui)" ]; then
-            docker kill wgui
-        fi
-        docker rm wgui
+        service wireguard-ui stop
+        rm /etc/systemd/system/wireguard-ui.service
         rm -r /opt/wireguard-ui
         dialog --backtitle "$INSTAVER" \
         --title "Deinstallation abgeschlossen" \
@@ -99,29 +70,19 @@ function remove_wgui {
     
 }
 function remove_wgui_toReinstall {
-    if [ -d "$OLDDIR" ]; then
-        mv $OLDDIR $DIR
-        
-    fi
-    
-    if [ -d "$DIR" ]; then
-        
-        if [ "$(docker ps -aq -f status=running -f name=wgui)" ]; then
-            docker kill wgui
-        fi
-        docker rm wgui
-        rm -r /opt/wireguard-ui
-        install_wgui
-    else
-        remove_wgui
-        
-    fi
-    
+    rm -r /opt/wireguard-ui
+    install_wgui
+}
+
+function keepFilesandReinstall {
+    rm /opt/wireguard-ui/wireguard-ui
+    install_wgui
 }
 ############# WGUI entfernen ende
 
 ############# WGUI installieren
 function install_wgui {
+    
     dialog --title "Wollen Sie fortfahren?" \
     --backtitle "$INSTAVER" \
     --yesno "Dieser Installer wird Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren." 15 60
@@ -138,33 +99,62 @@ function install_wgui {
     
 }
 
+function keepfiles{
+    if [ -f "$FILE" ]; then
+        dialog --title "Konfiguration vorhanden!" \
+        --backtitle "$INSTAVER" \
+        --yesno "Sollen die Konfigurationsdateien behalten werden?" 15 60
+        response=$?
+        case $response in
+            0) remove_wgui_toReinstall ;;
+            1) keepFilesandReinstall ;;
+            255) exit_clear ;;
+        esac
+    else
+        install_wgui
+    fi
+    
+}
+
 function wgui_installer {
-    if [ "$(docker ps -aq -f status=running -f name=wgui)" ]; then
+    
+    if [ -d "$DIR" ]; then
         dialog --title "WireGuard UI ist bereits installiert." \
         --backtitle "$INSTAVER" \
         --yesno "Soll es erneut installiert werden?" 15 60
         response=$?
         case $response in
-            0) remove_wgui_toReinstall ;;
+            0) keepfiles ;;
             1) exit_clear ;;
             255) exit_clear ;;
         esac
     fi
+    
     update_system
-    getPackets
     echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
     mkdir /opt/wireguard-ui
-    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/docker-compose.yml -O /opt/wireguard-ui/docker-compose.yml
+    arch=$(uname -i)
+    if [[ $arch == x86_64* ]]; then
+        wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.5/wireguard-ui-v0.3.5-linux-amd64.tar.gz -O /opt/wireguard-ui/install.tar.gz
+        elif [[ $arch == i*86 ]]; then
+        wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.5/wireguard-ui-v0.3.5-linux-386.tar.gz -O /opt/wireguard-ui/install.tar.gz
+        elif  [[ $arch == arm* ]]; then
+        wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.5/wireguard-ui-v0.3.5-linux-arm.tar.gz -O /opt/wireguard-ui/install.tar.gz
+    fi
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -O /etc/systemd/system/wgui.path
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -O /etc/systemd/system/wgui.service
+    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wireguard-ui.service -O /etc/systemd/system/wireguard-ui.service
     
     cd /opt/wireguard-ui
-    
-    docker-compose up -d
+    tar -xf install.tar.gz
+    rm install.tar.gz
     
     systemctl enable wgui.{path,service}
     systemctl start wgui.{path,service}
-    if [ "$(docker ps -aq -f status=running -f name=wgui)" ]; then
+    systemctl enable wireguard-ui
+    systemctl start wireguard-ui
+
+    if [ "$(systemctl is-active --quiet wireguard-ui)" ]; then
         dialog --backtitle "$INSTAVER" \
         --title "Installation abgeschlossen" \
         --msgbox 'Die Installation wurde erfolgreich abgeschlossen!' 15 60
@@ -183,18 +173,14 @@ function change_pw {
     # Verschieben falls alter Installationsordner
     
     
-    if [ -d "$DIR" ]; then
-        
-        if [ "$(docker ps -aq -f status=running -f name=wgui)" ]; then
-            docker kill wgui
-        fi
+    if [ -f "$FILE" ]; then
+        systemctl stop wireguard-ui
         rm /opt/wireguard-ui/db/server/users.json
         touch /opt/wireguard-ui/db/server/users.json
         user_name=$(dialog --inputbox "Neuen Benutzernamen eingeben:" 15 60 3>&1 1>&2 2>&3 3>&-)
         pass_word=$(dialog --passwordbox "Neues Passwort eingeben:" 15 60 3>&1- 1>&2- 2>&3-)
         echo -e "{\n                \"username\": \"$user_name\",\n                \"password\": \"$pass_word\"\n}" >>/opt/wireguard-ui/db/server/users.json
-        cd /opt/wireguard-ui
-        docker-compose up -d
+        systemctl start wireguard-ui
         dialog --backtitle "$INSTAVER" \
         --title "Fertig" \
         --msgbox 'Die Anmeldedaten wurden erfolgreich geändert!' 15 60
@@ -235,6 +221,12 @@ function exit_clear {
 apt install dialog
 export LANG=C.UTF-8
 # ============================== #
+# ALten Ordner verschieben
+if [ -d "$OLDDIR" ]; then
+    mv $OLDDIR $DIR
+    
+fi
+#=============================== #
 ##################################
 #         Start Dialog           #
 ##################################
@@ -247,7 +239,7 @@ DIALOG_MENU="Was soll getan werden? :"
 
 OPTIONS=(1 "Wireguard UI installieren"
     2 "Wireguard UI deinstallieren"
-    3 "Wireguard UI neu-installieren"
+    3 "Wireguard UI aktualisieren"
     4 "Wireguard UI Anmeldedaten ändern"
 5 "Installer verlassen")
 
@@ -263,7 +255,7 @@ clear
 case $CHOICE in
     1) install_wgui ;;
     2) remove_wgui ;;
-    3) remove_wgui_toReinstall ;;
+    3) keepfiles ;;
     4) change_pw ;;
     5) exit_clear ;;
 esac
