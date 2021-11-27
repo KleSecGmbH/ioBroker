@@ -2,6 +2,7 @@
 After=network.target
 
 [Service]
+WorkingDirectory=/opt/wireguard-ui
 ExecStart=/opt/wireguard-ui/wireguard-ui
 
 [Install]
