@@ -149,12 +149,13 @@ function wgui_installer {
     tar -xf install.tar.gz
     rm install.tar.gz
     
+    systemctl daemon-reload
     systemctl enable wgui.{path,service}
     systemctl start wgui.{path,service}
     systemctl enable wireguard-ui
     systemctl start wireguard-ui
 
-    if [ "$(systemctl is-active --quiet wireguard-ui)" ]; then
+    if systemctl is-active --quiet wireguard-ui ; then
         dialog --backtitle "$INSTAVER" \
         --title "Installation abgeschlossen" \
         --msgbox 'Die Installation wurde erfolgreich abgeschlossen!' 15 60
@@ -180,6 +181,7 @@ function change_pw {
         user_name=$(dialog --inputbox "Neuen Benutzernamen eingeben:" 15 60 3>&1 1>&2 2>&3 3>&-)
         pass_word=$(dialog --passwordbox "Neues Passwort eingeben:" 15 60 3>&1- 1>&2- 2>&3-)
         echo -e "{\n                \"username\": \"$user_name\",\n                \"password\": \"$pass_word\"\n}" >>/opt/wireguard-ui/db/server/users.json
+        systemctl daemon-reload
         systemctl start wireguard-ui
         dialog --backtitle "$INSTAVER" \
         --title "Fertig" \
