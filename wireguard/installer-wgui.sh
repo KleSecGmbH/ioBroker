@@ -118,7 +118,7 @@ function keepfiles {
 
 function wgui_installer {
     
-    if [ -d "$DIR" ]; then
+    if [ -f "$FILE" ]; then
         dialog --title "WireGuard UI ist bereits installiert." \
         --backtitle "$INSTAVER" \
         --yesno "Soll es erneut installiert werden?" 15 60
