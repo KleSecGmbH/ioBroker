@@ -99,7 +99,7 @@ function install_wgui {
     
 }
 
-function keepfiles{
+function keepfiles {
     if [ -f "$FILE" ]; then
         dialog --title "Konfiguration vorhanden!" \
         --backtitle "$INSTAVER" \
