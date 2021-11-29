@@ -2,7 +2,7 @@
 ##################################
 #            Variablen           #
 ##################################
-INSTAVER="wireguard-ui-install V1.0.3 Stand 27.11.2021     @2021 forum.iobroker.net/user/crunkfx"
+INSTAVER="wireguard-ui-install V1.0.4 Stand 27.11.2021     @2021 forum.iobroker.net/user/crunkfx"
 # Altes Installationsverzeichnis
 OLDDIR="/root/wireguard-ui"
 
