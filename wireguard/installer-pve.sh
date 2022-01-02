@@ -219,7 +219,7 @@ function complete_install {
 }
 
 function wginstallercomplete {
-   install_wgui
+    install_wgui
     echo -e "\e[1;100m####   Wireguard Installer wird gestartet\e[0m"
     sleep 5
     wget git.io/wireguard -O wireguard-install.sh
@@ -295,111 +295,4 @@ esac
 ##################################
 #        Start Dialog Ende       #
 ##################################
-##====================== Terminal leermachen ========================##
-printf "\033c"
-
-##============================= Header ==============================##
-print_centered "wireguard-pve-install V1.0.1 Stand 08.11.2021                                                                             2021 forum.iobroker.net/user/crunkfx" " "
-echo -e ""
-
-print_centered "-" "-"
-print_centered "                                                               " "#"
-print_centered "            Willkommen zum WireGuard Easy-Installer            " "#"
-print_centered "                                                               " "#"
-print_centered "-" "-"
-##======================= Farben definieren =========================##
-echo -e ""
-echo -e ""
-echo -e ""
-print_centered "Dieser Installer wird Wireguard-Server, Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren." " "
-echo -e ""
-echo -e ""
-
-
-
-read -p "                            Wollen Sie fortfahren? (j/n)         " A
-if [ "$A" == "" -o "$A" == "j" ] || [ "$A" == "" -o "$A" == "y" ];then
-    
-    # Updaten
-    echo -e "\e[1;100m#### 1.   Updates werden geholt und Installiert\e[0m"
-    s
-    echo -e "\e[1;104m#apt update wird ausgführt\e[0m"
-    
-    apt update > /dev/null
-    if [ $? -eq 0 ]; then
-        echo -e "\e[1;32m#Erfolgreich\e[0m"
-    else
-        echo -e "\e[0;31m#Fehler\e[0m"
-    fi
-    
-    
-    echo -e "\e[1;104m#apt upgrade wird ausgführt\e[0m"
-    apt upgrade -y > /dev/null
-    if [ $? -eq 0 ]; then
-        echo -e "\e[1;32m#Erfolgreich\e[0m"
-    else
-        echo -e "\e[0;31m#Fehler\e[0m"
-    fi
-    
-    
-    # Pakete laden
-    echo -e "\e[1;100m#### 2.   Die erforderlichen Pakete werden geladen und installiert\e[0m"
-    echo ""
-    echo -e "\e[1;104m#Docker wird installiert\e[0m"
-    apt install docker.io -y > /dev/null
-    if [ $? -eq 0 ]; then
-        echo -e "\e[1;32m#Erfolgreich\e[0m"
-    else
-        echo -e "\e[0;31m#Fehler\e[0m"
-    fi
-    
-    echo -e "\e[1;104m#Docker Compose wird installiert\e[0m"
-    apt install docker-compose -y > /dev/null
-    if [ $? -eq 0 ]; then
-        echo -e "\e[1;32m#Erfolgreich\e[0m"
-    else
-        echo -e "\e[0;31m#Fehler\e[0m"
-    fi
-    
-    echo -e "\e[1;104m#unattended-upgrades wird installiert\e[0m"
-    apt install unattended-upgrades -y > /dev/null
-    if [ $? -eq 0 ]; then
-        echo -e "\e[1;32m#Erfolgreich\e[0m"
-    else
-        echo -e "\e[0;31m#Fehler\e[0m"
-    fi
-    
-    # Wireguard UI Konfigurieren
-    echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
-    mkdir /root/wireguard-ui
-    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/docker-compose.yml -O /root/wireguard-ui/docker-compose.yml
-    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -O /etc/systemd/system/wgui.path
-    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -O /etc/systemd/system/wgui.service
-    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/50-unattended-upgrades -O /etc/apt/apt.conf.d/50-unattended-upgrades
-    
-    
-    cd /root/wireguard-ui
-    docker-compose up -d
-    
-    systemctl enable wgui.{path,service}
-    systemctl start wgui.{path,service}
-    # Firewallregeln setzen
-    echo -e "\e[1;100m#### 4.   Firewallregeln werden gesetzt\e[0m"
-    ufw allow 51820/udp
-    ufw allow 5000/tcp
-    ufw enable
-    
-    
-    
-    # WireGuard Installer Starten
-    echo -e "\e[1;100m#### 5.   Wireguard Installer wird gestartet\e[0m"
-    sleep 5
-    wget git.io/wireguard -O wireguard-install.sh
-    bash wireguard-install.sh
-    
-else
-    echo -e "\e[1;41mInstallation abgebrochen!\e[0m"
-    exit 1
-fi
-
 
