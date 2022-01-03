@@ -140,7 +140,14 @@ function wgui_installer {
         wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.5/wireguard-ui-v0.3.5-linux-arm.tar.gz -O /opt/wireguard-ui/install.tar.gz
     fi
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -O /etc/systemd/system/wgui.path
-    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -O /etc/systemd/system/wgui.service
+    if [ -d "/usr/bin/systemctl" ]; then
+    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui-bin.service -O /etc/systemd/system/wgui.service
+    else
+    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui-usr.service -O /etc/systemd/system/wgui.service
+    esac
+        
+    fi
+    
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/dev/wireguard/wireguard-ui.service -O /etc/systemd/system/wireguard-ui.service
     
     cd /opt/wireguard-ui
@@ -259,7 +266,7 @@ fi
 #         Start Dialog           #
 ##################################
 
-DIALOG_HEIGHT=15
+DIALOG_HEIGHT=30
 DIALOG_WIDTH=60
 DIALOG_CHOICE_HEIGHT=4
 DIALOG_TITLE="Willkommen zum WireGuard Easy-Installer"
