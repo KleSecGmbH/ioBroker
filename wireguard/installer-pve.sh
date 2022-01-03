@@ -44,6 +44,8 @@ function update_system {
 function remove_wgui {
     if [ -d "$DIR" ]; then
         service wireguard-ui stop
+        rm /etc/systemd/system/wgui.path
+        rm /etc/systemd/system/wgui.service
         rm /etc/systemd/system/wireguard-ui.service
         rm -r /opt/wireguard-ui
         dialog --backtitle "$INSTAVER" \
