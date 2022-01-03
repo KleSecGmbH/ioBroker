@@ -146,7 +146,7 @@ function wgui_installer {
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui-usr.service -O /etc/systemd/system/wgui.service     
     fi
     
-    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/dev/wireguard/wireguard-ui.service -O /etc/systemd/system/wireguard-ui.service
+    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wireguard-ui.service -O /etc/systemd/system/wireguard-ui.service
     
     cd /opt/wireguard-ui
     tar -xf install.tar.gz
