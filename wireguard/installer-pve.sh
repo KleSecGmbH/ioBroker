@@ -226,11 +226,12 @@ function complete_install {
 }
 
 function wginstallercomplete {
-    install_wgui
     echo -e "\e[1;100m####   Wireguard Installer wird gestartet\e[0m"
     sleep 5
     wget git.io/wireguard -O wireguard-install.sh
     bash wireguard-install.sh
+    install_wgui
+
     
 }
 
