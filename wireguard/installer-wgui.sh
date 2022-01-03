@@ -1,116 +1,269 @@
 #!/bin/sh
+##################################
+#            Variablen           #
+##################################
+INSTAVER="wireguard-ui-install V1.0.4 Stand 27.11.2021     @2021 forum.iobroker.net/user/crunkfx"
+# Altes Installationsverzeichnis
+OLDDIR="/root/wireguard-ui"
 
-##=== Funktion zum zentrieren von Text von github.com/TrinityCoder ==##
-function print_centered {
-     [[ $# == 0 ]] && return 1
+# Neues Installationsverzeichnis
+DIR="/opt/wireguard-ui"
+FILE="/opt/wireguard-ui/wireguard-ui"
 
-     declare -i TERM_COLS="$(tput cols)"
-     declare -i str_len="${#1}"
-     [[ $str_len -ge $TERM_COLS ]] && {
-          echo "$1";
-          return 0;
-     }
 
-     declare -i filler_len="$(( (TERM_COLS - str_len) / 2 ))"
-     [[ $# -ge 2 ]] && ch="${2:0:1}" || ch=" "
-     filler=""
-     for (( i = 0; i < filler_len; i++ )); do
-          filler="${filler}${ch}"
-     done
 
-     printf "%s%s%s" "$filler" "$1" "$filler"
-     [[ $(( (TERM_COLS - str_len) % 2 )) -ne 0 ]] && printf "%s" "${ch}"
-     printf "\n"
+##################################
+#        Funktionen Start        #
+##################################
 
-     return 0
+
+############# Update
+function update_system {
+    # Updaten
+    echo -e "\e[1;100m#### 1.   Updates werden geholt und Installiert\e[0m"
+    
+    echo -e "\e[1;104m#apt update wird ausgführt\e[0m"
+    
+    apt update >/dev/null
+    if [ $? -eq 0 ]; then
+        echo -e "\e[1;32m#Erfolgreich\e[0m"
+    else
+        echo -e "\e[0;31m#Fehler\e[0m"
+    fi
+    
+    echo -e "\e[1;104m#apt upgrade wird ausgführt\e[0m"
+    apt upgrade -y >/dev/null
+    if [ $? -eq 0 ]; then
+        echo -e "\e[1;32m#Erfolgreich\e[0m"
+    else
+        echo -e "\e[0;31m#Fehler\e[0m"
+    fi
+}
+############# Update Ende
+
+
+############# WGUI entfernen
+function remove_wgui {
+    if [ -d "$DIR" ]; then
+        service wireguard-ui stop
+        rm /etc/systemd/system/wgui.path
+        rm /etc/systemd/system/wgui.service
+        rm /etc/systemd/system/wireguard-ui.service
+        rm -r /opt/wireguard-ui
+        dialog --backtitle "$INSTAVER" \
+        --title "Deinstallation abgeschlossen" \
+        --msgbox 'Wireguard-UI wurde erfolgreich entfernt!' 15 60
+        exit_clear
+        
+        
+    else
+        
+        dialog --title "WireGuard UI ist nicht installiert." \
+        --backtitle "$INSTAVER" \
+        --yesno "Soll das getan werden?" 15 60
+        response=$?
+        case $response in
+            0) install_wgui ;;
+            1) exit_clear ;;
+            255) exit_clear ;;
+        esac
+        
+    fi
+    
+}
+function remove_wgui_toReinstall {
+    rm -r /opt/wireguard-ui
+    install_wgui
 }
 
-##====================== Terminal leermachen ========================##
-printf "\033c"
+function keepFilesandReinstall {
+    rm /opt/wireguard-ui/wireguard-ui
+    install_wgui
+}
+############# WGUI entfernen ende
 
-##============================= Header ==============================##
-print_centered "wireguard-ui-install V1.0.0 Stand 17.11.2021                                                                             2021 forum.iobroker.net/user/crunkfx" " "
-echo -e ""
+############# WGUI installieren
+function install_wgui {
+    
+    dialog --title "Wollen Sie fortfahren?" \
+    --backtitle "$INSTAVER" \
+    --yesno "Dieser Installer wird Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren." 15 60
+    response=$?
+    case $response in
+        0) wgui_installer ;;
+        1) exit_clear ;;
+        255) exit_clear ;;
+    esac
+    
+    
+    
+    ############# WGUI installieren ende
+    
+}
 
-print_centered "-" "-"
-print_centered "                                                               " "#"
-print_centered "            Willkommen zum WireGuard UI-Installer            " "#"
-print_centered "                                                               " "#"
-print_centered "-" "-"
-##======================= Farben definieren =========================##
-echo -e ""
-echo -e ""
-echo -e ""
-print_centered "Dieser Installer wird Wireguard-UI, sowie alle notwendigen Pakete und Paketquellen laden und installieren." " "
-echo -e ""
-echo -e ""
+function keepfiles {
+    if [ -f "$FILE" ]; then
+        dialog --title "Konfiguration vorhanden!" \
+        --backtitle "$INSTAVER" \
+        --yesno "Sollen die Konfigurationsdateien behalten werden?" 15 60
+        response=$?
+        case $response in
+            0) keepFilesandReinstall ;;
+            1) remove_wgui_toReinstall ;;
+            255) exit_clear ;;
+        esac
+    else
+        install_wgui
+    fi
+    
+}
 
+function wgui_installer {
+    
+    if [ -f "$FILE" ]; then
+        dialog --title "WireGuard UI ist bereits installiert." \
+        --backtitle "$INSTAVER" \
+        --yesno "Soll es erneut installiert werden?" 15 60
+        response=$?
+        case $response in
+            0) keepfiles ;;
+            1) exit_clear ;;
+            255) exit_clear ;;
+        esac
+    fi
+    systemctl stop wireguard-ui
+    update_system
+    echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
+    mkdir /opt/wireguard-ui
+    arch=$(uname -m)
+    if [[ $arch == x86_64* ]]; then
+        wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.5/wireguard-ui-v0.3.5-linux-amd64.tar.gz -O /opt/wireguard-ui/install.tar.gz
+        elif [[ $arch == i*86 ]]; then
+        wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.5/wireguard-ui-v0.3.5-linux-386.tar.gz -O /opt/wireguard-ui/install.tar.gz
+        elif  [[ $arch == arm* ]]; then
+        wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.5/wireguard-ui-v0.3.5-linux-arm.tar.gz -O /opt/wireguard-ui/install.tar.gz
+    fi
+    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -O /etc/systemd/system/wgui.path
+    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -O /etc/systemd/system/wgui.service
+    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/dev/wireguard/wireguard-ui.service -O /etc/systemd/system/wireguard-ui.service
+    
+    cd /opt/wireguard-ui
+    tar -xf install.tar.gz
+    rm install.tar.gz
 
+    systemctl daemon-reload
+    systemctl enable wgui.{path,service}
+    systemctl start wgui.{path,service}
+    systemctl enable wireguard-ui
+    systemctl start wireguard-ui
 
-read -p "                            Wollen Sie fortfahren? (j/n)         " A
-if [ "$A" == "" -o "$A" == "j" ] || [ "$A" == "" -o "$A" == "y" ];then
+    if systemctl is-active --quiet wireguard-ui ; then
+        dialog --backtitle "$INSTAVER" \
+        --title "Installation abgeschlossen" \
+        --msgbox 'Die Installation wurde erfolgreich abgeschlossen!' 15 60
+        
+    else
+        dialog --backtitle "$INSTAVER" \
+        --title "ERROR" \
+        --msgbox 'Ups. Irgendwas ist da schiefgeleufen ;(' 15 60
+    fi
+    exit_clear
+}
 
-# Updaten
-echo -e "\e[1;100m#### 1.   Updates werden geholt und Installiert\e[0m"
+# Anmeldedaten ändern
+function change_pw {
+    
+    # Verschieben falls alter Installationsordner
+    
+    
+    if [ -f "$FILE" ]; then
+        systemctl stop wireguard-ui
+        rm /opt/wireguard-ui/db/server/users.json
+        touch /opt/wireguard-ui/db/server/users.json
+        user_name=$(dialog --inputbox "Neuen Benutzernamen eingeben:" 15 60 3>&1 1>&2 2>&3 3>&-)
+        pass_word=$(dialog --passwordbox "Neues Passwort eingeben:" 15 60 3>&1- 1>&2- 2>&3-)
+        echo -e "{\n                \"username\": \"$user_name\",\n                \"password\": \"$pass_word\"\n}" >>/opt/wireguard-ui/db/server/users.json
+        systemctl daemon-reload
+        systemctl start wireguard-ui
+        dialog --backtitle "$INSTAVER" \
+        --title "Fertig" \
+        --msgbox 'Die Anmeldedaten wurden erfolgreich geändert!' 15 60
+        exit_clear
+    else
+        
+        dialog --title "WireGuard UI ist nicht installiert." \
+        --backtitle "$INSTAVER" \
+        --yesno "Soll das getan werden?" 15 60
+        response=$?
+        case $response in
+            0) install_wgui ;;
+            1) exit_clear ;;
+            255) exit_clear ;;
+        esac
+        
+    fi
+    
+}
 
-echo -e "\e[1;104m#apt update wird ausgführt\e[0m"
+function exit_clear {
+    printf "\033c"
+    exit
+}
+# Anmeldedaten ändern ende
 
-apt update > /dev/null
-if [ $? -eq 0 ]; then
-   echo -e "\e[1;32m#Erfolgreich\e[0m"
-else
-   echo -e "\e[0;31m#Fehler\e[0m"
+##################################
+#        Funktionen Ende         #
+##################################
+
+#=======================================================================================================================
+
+##################################
+#         Programm Start         #
+##################################
+
+# Dialog installieren
+apt install dialog
+export LANG=C.UTF-8
+# ============================== #
+# ALten Ordner verschieben
+if [ -d "$OLDDIR" ]; then
+    mv $OLDDIR $DIR
+    
 fi
+#=============================== #
+##################################
+#         Start Dialog           #
+##################################
 
+DIALOG_HEIGHT=15
+DIALOG_WIDTH=60
+DIALOG_CHOICE_HEIGHT=4
+DIALOG_TITLE="Willkommen zum WireGuard UI-Installer"
+DIALOG_MENU="Was soll getan werden? :"
 
-echo -e "\e[1;104m#apt upgrade wird ausgführt\e[0m"
-apt upgrade -y > /dev/null
-if [ $? -eq 0 ]; then
-   echo -e "\e[1;32m#Erfolgreich\e[0m"
-else
-   echo -e "\e[0;31m#Fehler\e[0m"
-fi
+OPTIONS=(1 "Wireguard UI installieren"
+    2 "Wireguard UI deinstallieren"
+    3 "Wireguard UI aktualisieren"
+    4 "Wireguard UI Anmeldedaten ändern"
+5 "Installer verlassen")
 
+CHOICE=$(dialog --clear \
+    --backtitle "$INSTAVER" \
+    --title "$DIALOG_TITLE" \
+    --menu "$DIALOG_MENU" \
+    $DIALOG_HEIGHT $DIALOG_WIDTH $DIALOG_CHOICE_HEIGHT \
+    "${OPTIONS[@]}" \
+2>&1 >/dev/tty)
 
-# Pakete laden
-echo -e "\e[1;100m#### 2.   Die erforderlichen Pakete werden geladen und installiert\e[0m"
-echo ""
-echo -e "\e[1;104m#Docker wird installiert\e[0m"
-apt install docker.io -y > /dev/null
-if [ $? -eq 0 ]; then
-   echo -e "\e[1;32m#Erfolgreich\e[0m"
-else
-   echo -e "\e[0;31m#Fehler\e[0m"
-fi
+clear
+case $CHOICE in
+    1) install_wgui ;;
+    2) remove_wgui ;;
+    3) keepfiles ;;
+    4) change_pw ;;
+    5) exit_clear ;;
+esac
 
-echo -e "\e[1;104m#Docker Compose wird installiert\e[0m"
-apt install docker-compose -y > /dev/null
-if [ $? -eq 0 ]; then
-   echo -e "\e[1;32m#Erfolgreich\e[0m"
-else
-   echo -e "\e[0;31m#Fehler\e[0m"
-fi
-
-
-
-# Wireguard UI Konfigurieren
-echo -e "\e[1;100m#### 3.   WireGuard-UI wird installiert\e[0m"
-mkdir /root/wireguard-ui
-wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/docker-compose.yml -O /root/wireguard-ui/docker-compose.yml
-wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -O /etc/systemd/system/wgui.path
-wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -O /etc/systemd/system/wgui.service
-
-
-
-cd /root/wireguard-ui
-docker-compose up -d
-
-systemctl enable wgui.{path,service}
-systemctl start wgui.{path,service}
-
-else
-    echo -e "\e[1;41mInstallation abgebrochen!\e[0m"
-    exit 1
-fi
-
-
+##################################
+#        Start Dialog Ende       #
+##################################
