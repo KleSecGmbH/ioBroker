@@ -2,7 +2,7 @@
 ##################################
 #            Variablen           #
 ##################################
-INSTAVER="wireguard-ui-install V1.2.0 Stand 02.01.2022     @2022 forum.iobroker.net/user/crunkfx"
+INSTAVER="wireguard-easy-install V1.2.0 Stand 02.01.2022     @2022 forum.iobroker.net/user/crunkfx"
 # Altes Installationsverzeichnis
 OLDDIR="/root/wireguard-ui"
 
@@ -141,9 +141,9 @@ function wgui_installer {
     fi
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -O /etc/systemd/system/wgui.path
     if [ -d "/usr/bin/systemctl" ]; then
-    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui-bin.service -O /etc/systemd/system/wgui.service
+    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui-usr.service -O /etc/systemd/system/wgui.service
     else
-    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui-usr.service -O /etc/systemd/system/wgui.service     
+    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui-bin.service -O /etc/systemd/system/wgui.service     
     fi
     
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wireguard-ui.service -O /etc/systemd/system/wireguard-ui.service
