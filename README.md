@@ -1,7 +1,7 @@
 WireGuard auf Proxmox UI
  Installationszeit | ca. 15 Minuten je nach Internetverbindung
 ---- | ----
- Stand | 08.11.2021
+ Stand | 02.01.2022
 ioBroker Forum Link | https://forum.iobroker.net/topic/49177/anleitung-wireguard-mit-wireguard-ui-auf-proxmox
 
 **Voraussetzungen:**
