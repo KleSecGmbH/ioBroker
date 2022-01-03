@@ -143,9 +143,7 @@ function wgui_installer {
     if [ -d "/usr/bin/systemctl" ]; then
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui-bin.service -O /etc/systemd/system/wgui.service
     else
-    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui-usr.service -O /etc/systemd/system/wgui.service
-    esac
-        
+    wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui-usr.service -O /etc/systemd/system/wgui.service     
     fi
     
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/dev/wireguard/wireguard-ui.service -O /etc/systemd/system/wireguard-ui.service
