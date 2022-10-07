@@ -137,11 +137,11 @@ function wgui_installer {
     mkdir /opt/wireguard-ui
     arch=$(uname -m)
     if [[ $arch == x86_64* ]]; then
-        wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.5/wireguard-ui-v0.3.5-linux-amd64.tar.gz -O /opt/wireguard-ui/install.tar.gz
+        wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.7/wireguard-ui-v0.3.7-linux-amd64.tar.gz -O /opt/wireguard-ui/install.tar.gz
         elif [[ $arch == i*86 ]]; then
-        wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.5/wireguard-ui-v0.3.5-linux-386.tar.gz -O /opt/wireguard-ui/install.tar.gz
+        wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.7/wireguard-ui-v0.3.7-linux-386.tar.gz -O /opt/wireguard-ui/install.tar.gz
         elif  [[ $arch == arm* ]]; then
-        wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.5/wireguard-ui-v0.3.5-linux-arm.tar.gz -O /opt/wireguard-ui/install.tar.gz
+        wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.7/wireguard-ui-v0.3.7-linux-arm.tar.gz -O /opt/wireguard-ui/install.tar.gz
     fi
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.path -O /etc/systemd/system/wgui.path
     wget https://raw.githubusercontent.com/KleSecGmbH/ioBroker/main/wireguard/wgui.service -O /etc/systemd/system/wgui.service
