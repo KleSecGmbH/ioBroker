@@ -1,0 +1,10 @@
+[Unit]
+Description=Restart WireGuard Service
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=$(which systemctl) restart wg-quick@wg0.service
+
+[Install]
+RequiredBy=wgui.path
