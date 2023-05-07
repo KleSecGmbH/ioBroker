@@ -135,7 +135,7 @@ function wgui_installer {
     mkdir /opt/wireguard-ui
     arch=$(uname -m)
     if [[ $arch == x86_64* ]]; then
-        wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.5/wireguard-ui-v0.3.5-linux-amd64.tar.gz -O /opt/wireguard-ui/install.tar.gz
+        wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.4.0/wireguard-ui-v0.4.0-linux-amd64.tar.gz -O /opt/wireguard-ui/install.tar.gz
         elif [[ $arch == i*86 ]]; then
         wget https://github.com/ngoduykhanh/wireguard-ui/releases/download/v0.3.5/wireguard-ui-v0.3.5-linux-386.tar.gz -O /opt/wireguard-ui/install.tar.gz
         elif  [[ $arch == arm* ]]; then
